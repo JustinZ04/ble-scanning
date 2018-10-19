@@ -19,8 +19,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        /*
         BluetoothManager mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = mBluetoothManager.getAdapter();
 
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity
                 startActivityForResult(enableBtIntent, 2);
             }
         }
+        */
     }
 
     @Override
@@ -75,6 +77,41 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         }
+    }
+
+    public void sendMessage(View view)
+    {
+        BluetoothManager mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        mBluetoothAdapter = mBluetoothManager.getAdapter();
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(this, new String[]
+                    {Manifest.permission.ACCESS_COARSE_LOCATION}, ACCESS_COARSE_LOCATION);
+        }
+
+        if (mBluetoothAdapter != null)
+        {
+            mHandler = new Handler();
+
+            if (!mBluetoothAdapter.isEnabled())
+            {
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBtIntent, 2);
+            }
+            else
+            {
+                mBluetoothLeScanner = mBluetoothAdapter.getBluetoothLeScanner();
+
+                if (mBluetoothLeScanner != null)
+                {
+                    startScanning();
+                }
+            }
+        }
+
+
     }
 
     private void startScanning()
@@ -101,8 +138,7 @@ public class MainActivity extends AppCompatActivity
         List<ScanFilter> scanFilters = new ArrayList<>();
 
         ScanFilter.Builder builder = new ScanFilter.Builder();
-        builder.setServiceUuid(ParcelUuid
-                .fromString("cac426a3-344f-45c8-8819-ebcfe81e4b23")); // change the last 2 to a 3
+        builder.setServiceUuid(Constants.UUID);
         scanFilters.add(builder.build());
 
         return scanFilters;
@@ -119,23 +155,24 @@ public class MainActivity extends AppCompatActivity
     private void stopScanning()
     {
         mBluetoothLeScanner.stopScan(mScanCallback);
+        mScanCallback = null;
         Log.d("scan", "Stopped scanning");
     }
 
     private class SampleScanCallback extends ScanCallback
     {
         // I think this has to be here
-        private ArrayList deviceList = new ArrayList(
-
-        );
+        private ArrayList<BluetoothDevice> deviceList = new ArrayList<>();
         @Override
         public void onScanResult(int callbackType, ScanResult result)
         {
             super.onScanResult(callbackType, result);
             BluetoothDevice b = result.getDevice();
-            Log.d("device", "a result: " + b.getName());
+            String record = result.getScanRecord().toString();
+            Log.d("device", "a result: " + record);
             Log.i("callbackType", String.valueOf(callbackType));
-            deviceList.add(result);
+            Toast.makeText(getApplicationContext(), record, Toast.LENGTH_SHORT).show();
+            deviceList.add(b);
         }
 
         @Override
@@ -146,7 +183,8 @@ public class MainActivity extends AppCompatActivity
 
             for(ScanResult result : results)
             {
-                deviceList.add(result);
+                BluetoothDevice b = result.getDevice();
+                deviceList.add(b);
             }
         }
 
