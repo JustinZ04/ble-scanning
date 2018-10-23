@@ -20,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,8 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Button attendButton = findViewById(R.id.button2);
+        attendButton.setEnabled(false);
 
         /*
         BluetoothManager mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
@@ -169,6 +172,13 @@ public class MainActivity extends AppCompatActivity
             super.onScanResult(callbackType, result);
             BluetoothDevice b = result.getDevice();
             String record = result.getScanRecord().toString();
+
+            if(result.getScanRecord().getServiceUuids().contains(Constants.UUID))
+            {
+                Button attendButton = findViewById(R.id.button2);
+                attendButton.setEnabled(true);
+            }
+
             Log.d("device", "a result: " + record);
             Log.i("callbackType", String.valueOf(callbackType));
             Toast.makeText(getApplicationContext(), record, Toast.LENGTH_SHORT).show();

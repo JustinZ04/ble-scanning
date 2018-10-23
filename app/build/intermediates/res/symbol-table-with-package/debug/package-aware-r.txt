@@ -679,6 +679,7 @@ id beginning
 id blocking
 id bottom
 id button
+id button2
 id buttonPanel
 id center
 id center_horizontal
@@ -878,6 +879,7 @@ string abc_shareactionprovider_share_with
 string abc_shareactionprovider_share_with_application
 string abc_toolbar_collapse_description
 string app_name
+string button
 string search_menu_title
 string start_scanning
 string status_bar_notification_info_overflow
