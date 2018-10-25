@@ -28,7 +28,7 @@ import java.util.List;
 // This might be working
 public class MainActivity extends AppCompatActivity
 {
-    private static long SCAN_PERIOD = 10000;
+    private static long SCAN_PERIOD = 15000;
     private BluetoothAdapter mBluetoothAdapter;
     private ScanCallback mScanCallback;
     private Handler mHandler;
@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity
     {
         if(mScanCallback == null)
         {
+            /*
             mHandler.postDelayed(new Runnable()
             {
                 @Override
@@ -129,6 +130,7 @@ public class MainActivity extends AppCompatActivity
                     stopScanning();
                 }
             }, SCAN_PERIOD);
+            */
 
             mScanCallback = new SampleScanCallback();
             mBluetoothLeScanner.startScan(buildScanFilters(), buildScanSettings(), mScanCallback);
@@ -150,7 +152,7 @@ public class MainActivity extends AppCompatActivity
     private ScanSettings buildScanSettings()
     {
         ScanSettings.Builder builder = new ScanSettings.Builder();
-        builder.setScanMode(ScanSettings.SCAN_MODE_LOW_POWER);
+        builder.setScanMode(ScanSettings.MATCH_MODE_AGGRESSIVE);
 
         return builder.build();
     }
@@ -159,7 +161,8 @@ public class MainActivity extends AppCompatActivity
     {
         mBluetoothLeScanner.stopScan(mScanCallback);
         mScanCallback = null;
-        Log.d("scan", "Stopped scanning");
+        Log.d("device", "Stopped scanning");
+        Toast.makeText(getApplicationContext(), "Stop scan", Toast.LENGTH_SHORT).show();
     }
 
     private class SampleScanCallback extends ScanCallback
@@ -169,6 +172,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onScanResult(int callbackType, ScanResult result)
         {
+            Toast.makeText(getApplicationContext(), "Got a result", Toast.LENGTH_SHORT).show();
             super.onScanResult(callbackType, result);
             BluetoothDevice b = result.getDevice();
             String record = result.getScanRecord().toString();
@@ -181,7 +185,7 @@ public class MainActivity extends AppCompatActivity
 
             Log.d("device", "a result: " + record);
             Log.i("callbackType", String.valueOf(callbackType));
-            Toast.makeText(getApplicationContext(), record, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), result.getScanRecord().toString(), Toast.LENGTH_SHORT).show();
             deviceList.add(b);
         }
 
