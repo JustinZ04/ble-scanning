@@ -1064,6 +1064,7 @@ id bottom
 id button
 id button2
 id button3
+id button4
 id buttonPanel
 id center
 id center_horizontal
@@ -1208,6 +1209,7 @@ id text2
 id textSpacerNoButtons
 id textSpacerNoTitle
 id textStart
+id textView2
 id text_input_password_toggle
 id textinput_counter
 id textinput_error
@@ -1358,6 +1360,7 @@ string appbar_scrolling_view_behavior
 string bottom_sheet_behavior
 string button
 string button4
+string button5
 string character_counter_content_description
 string character_counter_pattern
 string email
@@ -1382,6 +1385,7 @@ string prompt_password
 string search_menu_title
 string start_scanning
 string status_bar_notification_info_overflow
+string textview
 string title_activity_login
 string title_activity_sign_up
 style AlertDialog_AppCompat

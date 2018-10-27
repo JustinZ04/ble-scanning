@@ -20,4 +20,6 @@
     <string name="email">Email</string>
     <string name="name">Name</string>
     <string name="nid">NID</string>
+    <string name="button5">Connect</string>
+    <string name="textview" />
 </resources>

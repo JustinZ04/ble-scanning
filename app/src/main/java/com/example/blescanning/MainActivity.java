@@ -21,7 +21,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +43,10 @@ public class MainActivity extends AppCompatActivity
     private Handler mHandler;
     private BluetoothLeScanner mBluetoothLeScanner;
     private int ACCESS_COARSE_LOCATION = 1;
+    private int REQUEST_PERMISSIONS = 2;
+    private static String[] PERMISSIONS = {
+            Manifest.permission.INTERNET
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -42,6 +55,12 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Button attendButton = findViewById(R.id.button2);
         attendButton.setEnabled(false);
+
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(this, PERMISSIONS,
+                    REQUEST_PERMISSIONS);
+        }
 
         /*
         BluetoothManager mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
@@ -80,6 +99,31 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         }
+    }
+
+    public void dBTest(View view)
+    {
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = "http://192.168.1.232:8080/api/students";
+        final TextView mTextView = findViewById(R.id.textView2);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>()
+        {
+            @Override
+            public void onResponse(String response)
+            {
+                mTextView.setText(response);
+            }
+        }, new Response.ErrorListener()
+        {
+           @Override
+           public void onErrorResponse(VolleyError e)
+           {
+                mTextView.setText(e.getLocalizedMessage());
+           }
+        });
+
+        queue.add(stringRequest);
     }
 
     public void doLogin(View view)
