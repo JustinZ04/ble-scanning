@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">BTScanning</string>
+    <string name="button">Start Advertising</string>
+    <string name="button4">Stop</string>
+</resources>
